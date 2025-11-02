@@ -157,30 +157,34 @@
       <input type="text" id="location" name="location" placeholder="Type or click below to auto-fill" />
 
       <button type="button" class="btn-location" onclick="getReadableLocation()">Use My Current Location</button>
-
-      <h3>Bike/Scooter Details</h3>
-
-      <label for="company">Company</label>
-      <select id="company" name="company" required>
-        <option value="">-- Select Company --</option>
-        <option value="Hero">Hero</option>
-        <option value="Honda">Honda</option>
-        <option value="TVS">TVS</option>
-        <option value="Bajaj">Bajaj</option>
-        <option value="Yamaha">Yamaha</option>
-        <option value="Royal Enfield">Royal Enfield</option>
-        <option value="Suzuki">Suzuki</option>
-        <option value="KTM">KTM</option>
-        <option value="Jawa">Jawa</option>
+      
+      <label for="details">Details</label>
+      <select id="details" name="details" required>
+        <option value="">-- Select Details --</option>
+        <option value="Retailer/Workshop Type">Retailer/Workshop Type</option>
+        <option value="Spare Retailer">Spare Retailer</option>
+        <option value="Multi Brand">Multi Brand</option>
+        <option value="Spare plus Workshop">Spare plus Workshop</option>
+        <option value="4 Wheeler Workshop">4 Wheeler Workshop</option>
+        <option value="Small Workshop">Small Workshop</option>
         <option value="Other">Other</option>
       </select>
+      
+      <label for="Volume">Volume</label>
+      <select id="Volume" name="Volume" required>
+        <option value="">-- Select Volume --</option>
+        <option value="High">High</option>
+        <option value="Medium">Medium</option>
+        <option value="Low">Low</option>
+        <option value="Not Known">Not Known</option>
+      </select>
 
-      <label for="model">Model</label>
-      <input type="text" id="model" name="model" required />
-
-      <label for="register">Registration No</label>
-      <input type="text" id="register" name="register" />
-
+     <label for="Customer_Type">Customer Type</label>
+      <select id="Customer_Type" name="Customer Type" required>
+        <option value="">-- Select Customer Type --</option>
+        <option value="Know MAK/Followup">Know MAK/Followup</option>
+        <option value="MAK Customer">MAK Customer</option>
+      </select>  
       <!-- Hidden agent ID field -->
       <input type="hidden" id="agentid" name="agentid" />
 
@@ -189,7 +193,7 @@
   </div>
 
   <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbxiQ6kwzq_kdTzl1T8_arnU_Chg8neIw3329OA_pZSMiZtNNx3sYRunhjmkofkhxuDONQ/exec";
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxhhwYprVJSRQyD6aRW-J0waGreBOAmEySnfjV2NgOYgiKt3bwDVyeWHJcKIPB5m_QKgw/exec";
 
     const urlParams = new URLSearchParams(window.location.search);
     const agentid = urlParams.get('agentid');
@@ -211,10 +215,9 @@
       formData.append("name", form.name.value);
       formData.append("mobile", form.mobile.value);
       formData.append("location", form.location.value);
-      formData.append("company", form.company.value);
-      formData.append("model", form.model.value);
-      formData.append("register", form.register.value);
-      formData.append("agentid", form.agentid.value);
+      formData.append("details", form.details.value);
+      formData.append("Volume", form.Volume.value);
+      formData.append("Customer_Type", form.Customer_Type.value);
 
       fetch(scriptURL, {
         method: "POST",
@@ -282,3 +285,4 @@
 
 </body>
 </html>
+
