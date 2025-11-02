@@ -310,18 +310,16 @@
     function getReadableLocation() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(async pos => {
-          const lat = pos.coords.latitude, lon = pos.coords.longitude;
-          try {
-            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`);
-            const data = await res.json();
-            document.getElementById("location").value = data.display_name || "";
-          } catch {
-            alert("Error fetching location.");
-          }
-        }, () => alert("Location access denied."));
-      } else alert("Geolocation not supported.");
+          const lat = pos.coords.latitude;
+          const lon = pos.coords.longitude;
+          const mapLink = `https://www.google.com/maps?q=${lat},${lon}`;
+          document.getElementById("location").value = mapLink;
+        }, () => alert("Location access denied."));  
+      } else {   
+        alert("Geolocation not supported.");
+      }
     }
-
+    
     function validateMobile() {
       const mobile = document.getElementById("mobile").value;
       return /^\d{10}$/.test(mobile) || (alert("Please enter a valid 10-digit mobile number."), false);
