@@ -218,6 +218,8 @@
       formData.append("details", form.details.value);
       formData.append("Volume", form.Volume.value);
       formData.append("Customer_Type", form.Customer_Type.value);
+      formData.append("agentid", form.agentid.value);
+
 
       fetch(scriptURL, {
         method: "POST",
@@ -285,4 +287,5 @@
 
 </body>
 </html>
+
 
