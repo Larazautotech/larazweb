@@ -125,6 +125,68 @@
     button[type="submit"]:hover {
       opacity: 0.9;
     }
+
+    /* Dropdown custom style */
+    .dropdown {
+      position: relative;
+      width: 100%;
+      margin-bottom: 12px;
+      font-size: 0.75em;
+    }
+    .dropdown-selected {
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 7px;
+      border-radius: 6px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .dropdown-options {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-top: 5px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      display: none;
+      z-index: 10;
+    }
+    .dropdown-option {
+      display: flex;
+      align-items: center;
+      padding: 8px 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .dropdown-option:hover {
+      background: #f0f0f0;
+    }
+    .radio-circle {
+      width: 16px;
+      height: 16px;
+      border: 2px solid #ff0000;
+      border-radius: 50%;
+      margin-right: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .radio-circle::after {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: #ff0000;
+      border-radius: 50%;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .dropdown-option.active .radio-circle::after {
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
@@ -150,6 +212,9 @@
       <label for="sname">Shop Name</label>
       <input type="text" id="sname" name="sname" required />
 
+      <label for="contactperson">Contact Person</label>
+      <input type="text" id="contactperson" name="contactperson" required pattern="[A-Za-z0-9\\s]+" title="Only letters, numbers, and spaces allowed" />
+
       <label for="mobile">Mobile No</label>
       <input type="tel" id="mobile" name="mobile" required />
 
@@ -157,7 +222,7 @@
       <input type="text" id="location" name="location" placeholder="Type or click below to auto-fill" />
 
       <button type="button" class="btn-location" onclick="getReadableLocation()">Use My Current Location</button>
-      
+
       <label for="Retailer_or_workshopType">Retailer/Workshop Type</label>
       <select id="Retailer_or_workshopType" name="Retailer_or_workshopType" required>
         <option value="">-- Select Retailer/Workshop Type --</option>
@@ -168,7 +233,7 @@
         <option value="Small Workshop">Small Workshop</option>
         <option value="Other">Other</option>
       </select>
-      
+
       <label for="Volume">Volume</label>
       <select id="Volume" name="Volume" required>
         <option value="">-- Select Volume --</option>
@@ -178,30 +243,31 @@
         <option value="Not Known">Not Known</option>
       </select>
 
-     <label for="Brands_on_Shelf">Brands on shelf</label>
-      <select id="Brands_on_Shelf" name="Brands_on_Shelf" required>
-        <option value="Old MAK Customer">Old MAK Customer</option>
-        <option value="Know MAK">Know MAK</option>
-        <option value="Servo/HP">Servo/HP</option>
-        <option value="Motul/Veedol/Valvoline">Motul/Veedol/Valvoline</option>
-        <option value="Castrol">Castrol</option>
-        <option value="Others">Others</option>
-      </select>  
-      <!-- Hidden agent ID field -->
-      <input type="hidden" id="agentid" name="agentid" />
+      <!-- Custom Brands Dropdown -->
+      <label for="Brands_on_Shelf">Brands on Shelf</label>
+      <div class="dropdown" id="brandsDropdown">
+        <div class="dropdown-selected" id="selectedBrands">Select brands</div>
+        <div class="dropdown-options" id="brandOptions">
+          <div class="dropdown-option"><div class="radio-circle"></div> Old MAK Customer </div>
+          <div class="dropdown-option"><div class="radio-circle"></div> Know MAK </div>
+          <div class="dropdown-option"><div class="radio-circle"></div> Servo/HP </div>
+          <div class="dropdown-option"><div class="radio-circle"></div> Motul/Veedol/Valvoline </div>
+          <div class="dropdown-option"><div class="radio-circle"></div> Castrol </div>
+          <div class="dropdown-option"><div class="radio-circle"></div> Others </div>
+        </div>
+      </div>
+      <input type="hidden" id="Brands_on_Shelf" name="Brands_on_Shelf" />
 
+      <input type="hidden" id="agentid" name="agentid" />
       <button type="submit" id="submitBtn">Submit</button>
     </form>
   </div>
 
   <script>
     const scriptURL = "https://script.google.com/macros/s/AKfycbxhhwYprVJSRQyD6aRW-J0waGreBOAmEySnfjV2NgOYgiKt3bwDVyeWHJcKIPB5m_QKgw/exec";
-
     const urlParams = new URLSearchParams(window.location.search);
     const agentid = urlParams.get('agentid');
-    if (agentid) {
-      document.getElementById("agentid").value = agentid;
-    }
+    if (agentid) document.getElementById("agentid").value = agentid;
 
     function submitToSheet(e) {
       e.preventDefault();
@@ -214,14 +280,8 @@
       submitBtn.textContent = "Submitting...";
 
       const formData = new URLSearchParams();
-      formData.append("sname", form.sname.value);
-      formData.append("mobile", form.mobile.value);
-      formData.append("location", form.location.value);
-      formData.append("Retailer_or_workshopType", form.Retailer_or_workshopType.value);
-      formData.append("Volume", form.Volume.value);
-      formData.append("Brands_on_Shelf", form.Brands_on_Shelf.value);
-      formData.append("agentid", form.agentid.value);
-
+      ["sname", "contactperson", "mobile", "location", "Retailer_or_workshopType", "Volume", "Brands_on_Shelf", "agentid"]
+        .forEach(id => formData.append(id, form[id].value));
 
       fetch(scriptURL, {
         method: "POST",
@@ -234,9 +294,7 @@
           alert("Form submitted successfully!");
           form.reset();
           window.location.href = "https://laraz.in/associate.html";
-        } else {
-          alert("Error: " + result.error);
-        }
+        } else alert("Error: " + result.error);
         submitBtn.disabled = false;
         submitBtn.textContent = "Submit";
       })
@@ -246,50 +304,54 @@
         submitBtn.disabled = false;
         submitBtn.textContent = "Submit";
       });
-
       return false;
     }
 
     function getReadableLocation() {
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(async function(pos) {
-          const lat = pos.coords.latitude;
-          const lon = pos.coords.longitude;
-
+        navigator.geolocation.getCurrentPosition(async pos => {
+          const lat = pos.coords.latitude, lon = pos.coords.longitude;
           try {
-            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`);
-            const data = await response.json();
-            const address = data.display_name;
-            if (address) {
-              document.getElementById("location").value = address;
-            } else {
-              alert("Could not fetch address.");
-            }
-          } catch (err) {
+            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`);
+            const data = await res.json();
+            document.getElementById("location").value = data.display_name || "";
+          } catch {
             alert("Error fetching location.");
           }
-        }, function(error) {
-          alert("Location access denied.");
-        });
-      } else {
-        alert("Geolocation not supported.");
-      }
+        }, () => alert("Location access denied."));
+      } else alert("Geolocation not supported.");
     }
 
     function validateMobile() {
       const mobile = document.getElementById("mobile").value;
-      const mobilePattern = /^\d{10}$/;
-      if (!mobilePattern.test(mobile)) {
-        alert("Please enter a valid 10-digit mobile number.");
-        return false;
-      }
-      return true;
+      return /^\d{10}$/.test(mobile) || (alert("Please enter a valid 10-digit mobile number."), false);
     }
-  </script>
 
+    // Brands dropdown logic
+    const dropdown = document.getElementById("brandsDropdown");
+    const selected = document.getElementById("selectedBrands");
+    const options = document.getElementById("brandOptions");
+    const optionItems = options.querySelectorAll(".dropdown-option");
+    const hiddenInput = document.getElementById("Brands_on_Shelf");
+
+    selected.addEventListener("click", () => {
+      options.style.display = options.style.display === "block" ? "none" : "block";
+    });
+
+    optionItems.forEach(opt => {
+      opt.addEventListener("click", () => {
+        opt.classList.toggle("active");
+        const selectedBrands = Array.from(optionItems)
+          .filter(o => o.classList.contains("active"))
+          .map(o => o.textContent.trim());
+        selected.textContent = selectedBrands.length ? selectedBrands.join(", ") : "Select brands";
+        hiddenInput.value = selectedBrands.join(", ");
+      });
+    });
+
+    document.addEventListener("click", e => {
+      if (!dropdown.contains(e.target)) options.style.display = "none";
+    });
+  </script>
 </body>
 </html>
-
-
-
-
