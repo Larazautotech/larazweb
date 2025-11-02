@@ -147,8 +147,8 @@
     <h2 class="offer-heading">Associate Access</h2>
 
     <form id="larazForm" onsubmit="return submitToSheet(event)">
-      <label for="name">Name</label>
-      <input type="text" id="name" name="name" required />
+      <label for="sname">Shop Name</label>
+      <input type="text" id="sname" name="sname" required />
 
       <label for="mobile">Mobile No</label>
       <input type="tel" id="mobile" name="mobile" required />
@@ -158,10 +158,9 @@
 
       <button type="button" class="btn-location" onclick="getReadableLocation()">Use My Current Location</button>
       
-      <label for="details">Details</label>
-      <select id="details" name="details" required>
-        <option value="">-- Select Details --</option>
-        <option value="Retailer/Workshop Type">Retailer/Workshop Type</option>
+      <label for="Retailer_or_workshopType">Retailer/Workshop Type</label>
+      <select id="Retailer_or_workshopType" name="Retailer_or_workshopType" required>
+        <option value="">-- Select Retailer/Workshop Type --</option>
         <option value="Spare Retailer">Spare Retailer</option>
         <option value="Multi Brand">Multi Brand</option>
         <option value="Spare plus Workshop">Spare plus Workshop</option>
@@ -179,11 +178,14 @@
         <option value="Not Known">Not Known</option>
       </select>
 
-     <label for="Customer_Type">Customer Type</label>
-      <select id="Customer_Type" name="Customer_Type" required>
-        <option value="">-- Select Customer Type --</option>
-        <option value="Know MAK/Followup">Know MAK/Followup</option>
-        <option value="MAK Customer">MAK Customer</option>
+     <label for="Brands_on_Shelf">Brands on shelf</label>
+      <select id="Brands_on_Shelf" name="Brands_on_Shelf" required>
+        <option value="Old MAK Customer">Old MAK Customer</option>
+        <option value="Know MAK">Know MAK</option>
+        <option value="Servo/HP">Servo/HP</option>
+        <option value="Motul/Veedol/Valvoline">Motul/Veedol/Valvoline</option>
+        <option value="Castrol">Castrol</option>
+        <option value="Others">Others</option>
       </select>  
       <!-- Hidden agent ID field -->
       <input type="hidden" id="agentid" name="agentid" />
@@ -212,12 +214,12 @@
       submitBtn.textContent = "Submitting...";
 
       const formData = new URLSearchParams();
-      formData.append("name", form.name.value);
+      formData.append("sname", form.sname.value);
       formData.append("mobile", form.mobile.value);
       formData.append("location", form.location.value);
-      formData.append("details", form.details.value);
+      formData.append("Retailer_or_workshopType", form.Retailer_or_workshopType.value);
       formData.append("Volume", form.Volume.value);
-      formData.append("Customer_Type", form.Customer_Type.value);
+      formData.append("Brands_on_Shelf", form.Brands_on_Shelf.value);
       formData.append("agentid", form.agentid.value);
 
 
@@ -287,6 +289,7 @@
 
 </body>
 </html>
+
 
 
 
